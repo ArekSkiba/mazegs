@@ -15,20 +15,28 @@ class Cell:
     def draw(self, x1, y1, x2, y2):
         if self.__win is None:
             return
-        self.__x1 += x1
-        self.__x2 += x2
-        self.__y1 += y1
-        self.__y2 += y2
+        self.__x1 = x1
+        self.__x2 = x2
+        self.__y1 = y1
+        self.__y2 = y2
+
+        bg = "white"
         
-        if self.__win is not None:
-            if self.has_left_wall:
-                self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x1, self.__y2)))
-            if self.has_right_wall:
-                self.__win.draw_line(Line(Point(self.__x2, self.__y1), Point(self.__x2, self.__y2)))
-            if self.has_top_wall:
-                self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x2, self.__y1)))
-            if self.has_bottom_wall:
-                self.__win.draw_line(Line(Point(self.__x1, self.__y2), Point(self.__x2, self.__y2)))
+        # lewa
+        color = "black" if self.has_left_wall else bg
+        self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x1, self.__y2)), color)
+
+        # prawa
+        color = "black" if self.has_right_wall else bg
+        self.__win.draw_line(Line(Point(self.__x2, self.__y1), Point(self.__x2, self.__y2)), color)
+
+        # góra
+        color = "black" if self.has_top_wall else bg
+        self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x2, self.__y1)), color)
+
+        # dół
+        color = "black" if self.has_bottom_wall else bg
+        self.__win.draw_line(Line(Point(self.__x1, self.__y2), Point(self.__x2, self.__y2)), color)
 
     def draw_move(self, to_cell, undo=False):
         start_x = (self.__x1 + self.__x2) // 2
