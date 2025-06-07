@@ -28,6 +28,7 @@ class Maze:
         self.__create_cells()
         self.__break_entrance_and_exit()
         self.__break_walls_r(0, 0)
+        self.__reset_cells_visited()
 
     def __create_cells(self):
         for i in range(self.__num_cols):
@@ -101,3 +102,45 @@ class Maze:
                 self.__cells[ni][nj].has_left_wall = False
 
             self.__break_walls_r(ni, nj)
+        
+    def __reset_cells_visited(self):
+        for col in self.__cells:
+            for cell in col:
+                cell.visited = False
+    
+    def solve(self):
+        return self._solve_r(0, 0)
+    
+    def _solve_r(self, i, j):
+        self.__animate()
+        
+        current = self.__cells[i][j]
+        current.visited = True
+
+        if i == self.__num_cols - 1 and j == self.__num_rows - 1:
+            return True
+
+        # kierunki: (dx, dy, warunek ściany, has_wall_attr, nazwany_sąsiad)
+        directions = [
+            (0, -1, "has_top_wall"),    # góra
+            (0, 1, "has_bottom_wall"),  # dół
+            (-1, 0, "has_left_wall"),   # lewo
+            (1, 0, "has_right_wall")    # prawo
+        ]
+
+        for dx, dy, wall_attr in directions:
+            ni = i + dx
+            nj = j + dy
+
+            if (
+                0 <= ni < self.__num_cols and
+                0 <= nj < self.__num_rows and
+                not getattr(current, wall_attr) and
+                not self.__cells[ni][nj].visited
+            ):
+                current.draw_move(self.__cells[ni][nj])
+                if self._solve_r(ni, nj):
+                    return True
+                current.draw_move(self.__cells[ni][nj], undo=True)
+
+        return False

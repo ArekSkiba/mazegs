@@ -44,6 +44,13 @@ class Tests(unittest.TestCase):
         self.assertEqual(len(m._Maze__cells[0]), 4)
 
 
+    def test_reset_cells_visited(self):
+        m = Maze(0, 0, 4, 4, 10, 10, None)
+        # ręcznie zaznacz jedną komórkę jako odwiedzoną
+        m._Maze__cells[0][0].visited = True
+        m._Maze__reset_cells_visited()
+        self.assertFalse(m._Maze__cells[0][0].visited)
+
 
 
 
